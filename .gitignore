@@ -1,0 +1,8 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+reports/
+data/
+notebooks/aclImdb/
+notebooks/aclImdb_v1.tar.gz.tar.gz

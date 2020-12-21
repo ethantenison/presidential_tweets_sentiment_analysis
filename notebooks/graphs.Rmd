@@ -1,0 +1,95 @@
+---
+title: "Trump's Tweet Sentiments"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r data, message=FALSE, warning=FALSE}
+options(scipen=999)
+setwd("C:/Users/tenis/Desktop/Data_Projects/presidential_tweets_sentiment_analysis")
+
+library(ggplot2)
+library(tidyverse)
+library(scales)
+library(viridis)
+library(readr)
+
+his <- read_csv("data/processed/hispanic_sentiment.csv")
+
+
+```
+
+# **Hispanic Overtime**
+
+cdplot(Sentiment \~ Year, data=his)
+
+```{r data_cleaning}
+library(anytime)
+library(lubridate)
+
+his$created_at <- anytime::anydate(his$created_at)
+#his$year <- year(his$created_at)
+his$Year <- quarter(his$created_at, with_year = TRUE)
+his <- na.omit(his) 
+his$Sentiment <- as.character(his$Sentiment)
+his$Sentiment[his$Sentiment == 1] = "Positive"
+his$Sentiment[his$Sentiment == 0] = "Negative"
+his$Sentiment <- as.factor(his$Sentiment)
+
+cdplot(Sentiment ~ Year, data=his)
+```
+
+# Immigration
+
+cdplot(Sentiment \~ Year, data = im)
+
+```{r, immigration}
+
+
+im <-
+  dplyr::filter(
+    his,
+    grepl(
+      'Immigration|immigration|Immigrant|immigrant|immigrants|Immigrants',
+      text
+    )
+  )
+
+mex <-
+  dplyr::filter(his, grepl('Mexico|Mexican|mexico|mexican', text))
+
+cdplot(Sentiment ~ Year, data = im)
+```
+
+# Mexico
+
+```{r, mexico}
+
+
+mex <-
+  dplyr::filter(his, grepl('Mexico|Mexican|mexico|mexican', text))
+
+cdplot(Sentiment ~ Year, data = mex)
+
+```
+
+# Sentiment of Trump's Tweets Relating to China
+
+cdplot(Sentiment \~ Year, data=chi)
+
+```{r china}
+chi <- read_csv("data/processed/china_sentiment.csv")
+chi$created_at <- anytime::anydate(chi$created_at)
+#chi$year <- year(chi$created_at)
+chi$Year <- quarter(chi$created_at, with_year = TRUE)
+chi <- na.omit(chi) 
+chi$Sentiment <- as.character(chi$Sentiment)
+chi$Sentiment[chi$Sentiment == 1] = "Positive"
+chi$Sentiment[chi$Sentiment == 0] = "Negative"
+chi$Sentiment <- as.factor(chi$Sentiment)
+
+cdplot(Sentiment ~ Year, data=chi)
+```
